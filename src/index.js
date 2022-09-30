@@ -10,16 +10,16 @@ resolver.setServers(['8.8.8.8', '1.1.1.1']);
     let resolvedDomains = {};
 
     for await (const domain of domains) {
-        const ns = await resolver.resolveNs(domain);
-        const mx = await resolver.resolveMx(domain);
 
-        // console.log(domain, ns);
+        try {
+            const resolved = await resolver.resolveAny(domain);
 
-        resolvedDomains = {
-            ...resolvedDomains, [domain]: {
-                ns: ns, mx: mx
-            }
-        };
+            resolvedDomains = {
+                ...resolvedDomains, [domain]: [...resolved],
+            };
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     console.log(resolvedDomains);
